@@ -82,7 +82,11 @@ nav div a:hover{text-decoration:underline}
 .tabs button[aria-selected=true]{background:var(--amber);color:var(--ink)}
 .panel{margin-top:28px;min-height:150px}
 .panel p{max-width:60ch;color:#ffffffcc}
-.panel .chips li{background:#ffffff14;border:1px solid #ffffff33;font-size:1rem;padding:8px 18px;animation:pop .35s both}
+.course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:26px;list-style:none;padding:0}
+.course-card{padding:18px 20px;border:1px solid #ffffff33;border-radius:16px;background:#ffffff0c;animation:pop .35s both}
+.course-card strong{display:block;font-size:1.05rem}
+.course-card span{display:block;margin-top:7px;color:#ffffffcc;font-size:.92rem;line-height:1.65}
+@media(max-width:600px){.course-grid{grid-template-columns:1fr}}
 @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}}
 .focus{margin-top:64px;border-top:1px solid #ffffff33}
 details{border-bottom:1px solid #ffffff33}
@@ -360,14 +364,34 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
 
   // 학년별 탭
   var courses=[
-    {d:'저학년에서는 경영학의 기본기와 프로그래밍, 데이터베이스의 기초를 차근차근 쌓습니다.',c:['마케팅','재무관리','창업','HTML','Python','데이터베이스 기초']},
-    {d:'고학년에서는 배운 기초를 실제 문제에 적용하는 다양한 응용 과목을 배웁니다.',c:['데이터 분석','금융투자관리','고객관계관리(CRM)']}
+    {d:'저학년에서는 경영학의 기본기와 프로그래밍, 데이터베이스의 기초를 차근차근 쌓습니다.',c:[
+      {n:'마케팅',d:'고객과 시장을 이해하고 상품·가격·홍보 전략을 세웁니다.'},
+      {n:'재무관리',d:'투자와 자금 조달, 위험을 고려한 기업의 재무 의사결정을 살펴봅니다.'},
+      {n:'창업',d:'고객 문제를 찾아 사업 아이디어와 수익 모델로 구체화합니다.'},
+      {n:'HTML',d:'웹 페이지의 제목, 문단, 링크 등 콘텐츠 구조를 만듭니다.'},
+      {n:'Python',d:'프로그래밍 기초를 익히고 데이터 처리와 간단한 자동화를 해봅니다.'},
+      {n:'데이터베이스 기초',d:'정보를 체계적으로 저장하고 SQL로 조회·관리하는 법을 익힙니다.'}
+    ]},
+    {d:'고학년에서는 배운 기초를 실제 문제에 적용하는 다양한 응용 과목을 배웁니다.',c:[
+      {n:'데이터 분석',d:'데이터를 정리하고 분석해 의사결정에 필요한 근거를 찾습니다.'},
+      {n:'금융투자관리',d:'투자 대상의 수익과 위험을 비교해 자산 배분을 살펴봅니다.'},
+      {n:'고객관계관리(CRM)',d:'고객 정보를 바탕으로 관계를 관리하고 맞춤형 서비스를 기획합니다.'}
+    ]}
   ];
   var tabs=document.querySelectorAll('.tabs button'),panel=document.getElementById('panel');
   function showTab(i){
     tabs.forEach(function(b,j){b.setAttribute('aria-selected',i===j)});
     panel.setAttribute('aria-labelledby','t'+i);
-    panel.innerHTML='<p>'+courses[i].d+'</p><ul class="chips">'+courses[i].c.map(function(x,k){return '<li style="animation-delay:'+k*60+'ms">'+x+'</li>'}).join('')+'</ul>';
+    panel.replaceChildren();
+    var intro=document.createElement('p');intro.textContent=courses[i].d;panel.appendChild(intro);
+    var list=document.createElement('ul');list.className='course-grid';
+    courses[i].c.forEach(function(course,k){
+      var item=document.createElement('li');item.className='course-card';item.style.animationDelay=(k*60)+'ms';
+      var title=document.createElement('strong');title.textContent=course.n;
+      var description=document.createElement('span');description.textContent=course.d;
+      item.append(title,description);list.appendChild(item);
+    });
+    panel.appendChild(list);
   }
   tabs.forEach(function(b,i){b.addEventListener('click',function(){showTab(i)})});
   showTab(0);
