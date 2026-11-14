@@ -143,11 +143,24 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
 #guestbook h2{margin-inline:auto;text-align:center}
 #guestbook .lead{margin-inline:auto;text-align:center}
 .guestbook-box{max-width:820px;margin:40px auto 0;padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--paper)}
-.guestbook-note{margin-bottom:18px;color:#12163Acc;font-size:.92rem}
-.guestbook-note a{font-weight:700}
-.guestbook-widget{min-height:180px}
-.guestbook-widget .utterances{max-width:100%}
-@media(max-width:600px){.guestbook-box{padding:18px 14px}}
+.guestbook-note{margin-bottom:22px;color:#12163Acc;font-size:.92rem}
+.guestbook-form{display:grid;gap:10px}
+.guestbook-form label{font-weight:750}
+.guestbook-form input,.guestbook-form textarea{width:100%;padding:13px 15px;border:1px solid #12163A40;border-radius:12px;background:#fff;color:var(--ink);font:inherit}
+.guestbook-form textarea{min-height:130px;resize:vertical}
+.guestbook-form button{font:inherit;font-weight:700;border:0;cursor:pointer}
+.guestbook-form-actions{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.guestbook-count{color:#12163A99;font-size:.88rem}
+.guestbook-form button:disabled{opacity:.6;cursor:wait}
+.guestbook-status{min-height:1.6em;margin:4px 0 0;color:var(--indigo);font-weight:650}
+.guestbook-honeypot{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.guestbook-list{display:grid;gap:14px;list-style:none;padding:0;margin-top:28px}
+.guestbook-list li{padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.guestbook-entry-head{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.guestbook-entry-head time{color:#12163A88;font-size:.84rem;white-space:nowrap}
+.guestbook-entry-message{margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+.guestbook-empty{padding:24px 0;color:#12163A99;text-align:center}
+@media(max-width:600px){.guestbook-box{padding:18px 14px}.guestbook-entry-head{align-items:flex-start;flex-direction:column;gap:2px}}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -279,16 +292,21 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
     <h2 id="guestbook-title">방명록</h2>
     <p class="lead">방문해 주셔서 감사합니다. 응원과 의견을 자유롭게 남겨 주세요.</p>
     <div class="guestbook-box">
-      <p class="guestbook-note">방명록 작성에는 GitHub 로그인이 필요합니다. 댓글은 공개됩니다.</p>
-      <div class="guestbook-widget" id="guestbook-widget" aria-label="방명록 댓글">
-        <script src="https://utteranc.es/client.js"
-          repo="hyebin330/hyebin330.github.io"
-          issue-term="Guestbook"
-          theme="github-light"
-          crossorigin="anonymous"
-          async></script>
-      </div>
-      <noscript>방명록을 보려면 JavaScript를 켜 주세요.</noscript>
+      <p class="guestbook-note">별명만 입력하면 방명록을 남길 수 있습니다. 글은 공개되니 전화번호나 이메일 같은 개인정보는 적지 말아 주세요.</p>
+      <form class="guestbook-form" id="guestbook-form">
+        <label for="guestbook-name">별명</label>
+        <input id="guestbook-name" name="name" maxlength="24" autocomplete="nickname" required placeholder="예: 데이터 꿈나무">
+        <label for="guestbook-message">남기고 싶은 말</label>
+        <textarea id="guestbook-message" name="message" maxlength="500" required placeholder="방문 소감이나 응원 메시지를 적어 주세요."></textarea>
+        <div class="guestbook-honeypot" aria-hidden="true"><label for="guestbook-website">웹사이트 (비워 두세요)</label><input id="guestbook-website" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="guestbook-form-actions">
+          <span class="guestbook-count" id="guestbook-count">0 / 500</span>
+          <button class="btn" id="guestbook-submit" type="submit">방명록 남기기</button>
+        </div>
+        <p class="guestbook-status" id="guestbook-status" role="status" aria-live="polite"></p>
+      </form>
+      <ol class="guestbook-list" id="guestbook-list" aria-label="방명록 목록"><li class="guestbook-empty">방명록을 불러오는 중입니다.</li></ol>
+      <noscript>방명록을 이용하려면 JavaScript를 켜 주세요.</noscript>
     </div>
   </div>
 </section>
@@ -375,6 +393,61 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
   var certs=['CPA(공인회계사)','변리사','관세사','세무사','감정평가사','AFPK','정보처리기사','SQLD','SQLP','CISA','MCSE','OCP','SAP 공인 컨설턴트','OCJP','CCNA/CCNP','PMP'];
   var h=certs.map(function(c){return '<span>'+c+'</span>'}).join('');
   document.getElementById('certs').innerHTML=h+h;
+})();
+</script>
+<script>
+(function(){
+  var form=document.getElementById('guestbook-form');
+  var nameField=document.getElementById('guestbook-name');
+  var messageField=document.getElementById('guestbook-message');
+  var count=document.getElementById('guestbook-count');
+  var status=document.getElementById('guestbook-status');
+  var list=document.getElementById('guestbook-list');
+  var submit=document.getElementById('guestbook-submit');
+  var apiBase=location.hostname==='hyebin330.github.io'?'https://hyebin330-mis-guestbook.netlify.app':'';
+  var endpoint=apiBase+'/api/guestbook';
+
+  function setStatus(message){status.textContent=message}
+  function updateCount(){count.textContent=Array.from(messageField.value).length+' / 500'}
+  function renderEntries(entries){
+    list.replaceChildren();
+    if(!entries.length){var empty=document.createElement('li');empty.className='guestbook-empty';empty.textContent='첫 방명록을 남겨 주세요.';list.appendChild(empty);return}
+    entries.forEach(function(entry){
+      var item=document.createElement('li');
+      var article=document.createElement('article');
+      var head=document.createElement('div');head.className='guestbook-entry-head';
+      var author=document.createElement('strong');author.textContent=entry.name;
+      var time=document.createElement('time');
+      var date=new Date(entry.createdAt);
+      time.dateTime=Number.isNaN(date.getTime())?'':date.toISOString();
+      time.textContent=Number.isNaN(date.getTime())?'':date.toLocaleString('ko-KR',{dateStyle:'medium',timeStyle:'short'});
+      var message=document.createElement('p');message.className='guestbook-entry-message';message.textContent=entry.message;
+      head.append(author,time);article.append(head,message);item.appendChild(article);list.appendChild(item);
+    });
+  }
+  async function loadEntries(){
+    try{
+      var response=await fetch(endpoint,{headers:{Accept:'application/json'}});
+      if(!response.ok)throw new Error('load');
+      var data=await response.json();renderEntries(Array.isArray(data.entries)?data.entries:[]);
+    }catch(error){
+      list.replaceChildren();var item=document.createElement('li');item.className='guestbook-empty';item.textContent='방명록을 불러오지 못했습니다. 잠시 후 다시 방문해 주세요.';list.appendChild(item);
+    }
+  }
+  messageField.addEventListener('input',updateCount);
+  form.addEventListener('submit',async function(event){
+    event.preventDefault();setStatus('');submit.disabled=true;
+    try{
+      var response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({name:nameField.value,message:messageField.value,website:form.elements.website.value})});
+      var data=await response.json().catch(function(){return {}});
+      if(response.status===429)throw new Error('tooMany');
+      if(!response.ok)throw new Error(data.error||'save');
+      form.reset();updateCount();setStatus('방명록을 남겼습니다.');await loadEntries();
+    }catch(error){
+      setStatus(error.message==='tooMany'?'잠시 후 다시 시도해 주세요.':'저장하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    }finally{submit.disabled=false}
+  });
+  updateCount();loadEntries();
 })();
 </script>
 </body>
