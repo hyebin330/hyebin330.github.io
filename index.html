@@ -141,7 +141,12 @@ details p{padding:0 0 24px;max-width:60ch;color:#ffffffcc}
 .loop div:nth-child(2){margin-left:28px;background:var(--cyan);color:var(--deep)}
 .loop div:nth-child(3){margin-left:56px;background:var(--amber);color:var(--ink)}
 .gov{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;list-style:none;padding:0}
-.gov li{padding:6px 14px;border:1px solid #ffffff66;border-radius:999px;font-size:.9rem;font-weight:700}
+.gov button{padding:6px 14px;border:1px solid #ffffff66;border-radius:999px;background:transparent;color:#fff;font:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.gov button:hover,.gov button[aria-pressed=true]{background:var(--cyan);border-color:var(--cyan);color:var(--deep)}
+.gov-explanation{margin-top:16px;padding:18px 20px;border-radius:16px;background:#ffffff18;color:#fff}
+.gov-explanation strong{display:block;font-size:1rem}
+.gov-explanation p{margin-top:6px;color:#ffffffdf;font-size:.92rem;line-height:1.65}
+.gov-explanation a{display:inline-block;margin-top:9px;color:var(--cyan);font-size:.85rem;text-underline-offset:3px}
 
 /* links + footer */
 #go{text-align:center}
@@ -283,7 +288,18 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
     <div>
       <h2>선배가 끌어주는 학부, 후배가 이어가는 학부.</h2>
       <p class="lead">졸업생들이 멘토링 프로그램으로 후배에게 더 많은 기회를 열어 주는 교육의 선순환이 이어지고 있습니다. 우수한 연구 실적과 취·창업 실적을 인정받아 다양한 정부 대학 지원 사업에도 선정되었습니다.</p>
-      <ul class="gov"><li>LINC+</li><li>CK-II</li><li>BK21+PLUS</li><li>4단계 BK21</li></ul>
+      <div class="gov" role="group" aria-label="대학 지원 사업 설명 선택">
+        <button type="button" aria-pressed="true" data-program="linc">LINC+</button>
+        <button type="button" aria-pressed="false" data-program="ck">CK-II</button>
+        <button type="button" aria-pressed="false" data-program="bkplus">BK21+PLUS</button>
+        <button type="button" aria-pressed="false" data-program="bk4">4단계 BK21</button>
+      </div>
+      <div class="gov-explanation" id="gov-explanation" aria-live="polite">
+        <strong id="gov-title">LINC+란?</strong>
+        <p id="gov-description">대학 수업과 산업 현장을 연결하는 산학협력 지원 사업이에요. 현장실습이나 기업 연계 교육·프로젝트 등을 지원했으며, 경영정보학부가 참여 학부로 선정된 이력이 있습니다.</p>
+        <a id="gov-source" href="https://biz.kookmin.ac.kr/undergraduate/info/intro?tab=3" target="_blank" rel="noopener">국민대 공식 사업 이력 보기</a>
+      </div>
+      <p class="cap" style="color:#ffffffbb">학교가 참여·선정된 사업 이력입니다. 사업별 기간과 지원 대상은 서로 달라요.</p>
     </div>
     <div class="loop">
       <div>선배가 현장에서 쌓은 경험</div>
@@ -376,6 +392,22 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
     vid.innerHTML='<iframe src="https://www.youtube.com/embed/fYSxNKPFNtk?autoplay=1" title="경영정보학부 소개 영상" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
     vid.style.cursor='default';
   },{once:true});
+
+  // 대학 지원 사업 설명 선택
+  var programInfo={
+    linc:{title:'LINC+란?',description:'대학 수업과 산업 현장을 연결하는 산학협력 지원 사업이에요. 현장실습이나 기업 연계 교육·프로젝트 등을 지원했으며, 경영정보학부가 참여 학부로 선정된 이력이 있습니다.',source:'https://biz.kookmin.ac.kr/undergraduate/info/intro?tab=3',sourceLabel:'국민대 공식 사업 이력 보기'},
+    ck:{title:'CK-II란?',description:'수도권 대학의 강점 분야와 전공을 키우기 위한 대학 특성화 사업이에요. 국민대는 디자인대학·신소재융합대와 함께 특성화 컨소시엄으로 선정된 이력이 있습니다.',source:'https://www.moe.go.kr/boardCnts/view.do?boardID=294&boardSeq=54653&lev=0&m=020402&opType=N&s=moe&statusYN=W',sourceLabel:'교육부 CK 사업 설명 보기'},
+    bkplus:{title:'BK21+PLUS란?',description:'BK21의 3단계 사업(2013~2020)이에요. 대학원 교육·연구를 지원하고 석·박사급 연구 인재를 키우는 데 초점을 두었습니다. 4단계 BK21의 이전 단계예요.',source:'https://bk21four.nrf.re.kr/sub01/sub101/list.do',sourceLabel:'한국연구재단 BK21 사업 안내 보기'},
+    bk4:{title:'4단계 BK21이란?',description:'2020~2027년 운영되는 BK21 사업 단계예요. 대학원생과 신진 연구 인력이 학업과 연구에 집중하도록 지원하고, 연구중심대학과 석·박사급 인재를 키우는 것이 목적입니다. 국민대 경영대학 경영학 분야 교육연구단이 선정된 이력이 있습니다.',source:'https://www.moe.go.kr/boardCnts/view.do?boardID=294&boardSeq=79190&lev=0&m=020402&opType=N&page=2&s=moe&searchType=null&statusYN=W',sourceLabel:'교육부 4단계 BK21 설명 보기'}
+  };
+  var programButtons=document.querySelectorAll('.gov button');
+  programButtons.forEach(function(button){button.addEventListener('click',function(){
+    var info=programInfo[button.dataset.program];if(!info)return;
+    programButtons.forEach(function(other){other.setAttribute('aria-pressed',other===button?'true':'false')});
+    document.getElementById('gov-title').textContent=info.title;
+    document.getElementById('gov-description').textContent=info.description;
+    var source=document.getElementById('gov-source');source.href=info.source;source.textContent=info.sourceLabel;
+  })});
 
   // 학년별 탭
   var courses=[
