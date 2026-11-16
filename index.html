@@ -111,6 +111,15 @@ details p{padding:0 0 24px;max-width:60ch;color:#ffffffcc}
 .roleview{padding:32px;border-radius:24px;background:var(--amber);min-height:200px}
 .roleview h3{font-size:1.5rem;letter-spacing:-.03em}
 .roleview p{margin-top:10px}
+.roleview .role-summary{font-weight:650}
+.role-details{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.role-details section{padding:16px;border-radius:14px;background:#fff8}
+.role-details h4{font-size:.95rem;margin-bottom:6px}
+.role-details p{margin:0;font-size:.92rem;line-height:1.65}
+.career-note{margin-top:18px;font-size:.88rem;color:#12163Aab}
+.career-sources{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px;font-size:.88rem}
+.career-sources a{text-underline-offset:3px}
+@media(max-width:600px){.role-details{grid-template-columns:1fr}}
 .where{margin-top:40px}
 .where h3{font-size:1.1rem;margin-bottom:12px}
 .where .chips{margin-top:0}
@@ -244,7 +253,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
 <section id="career">
   <div class="wrap">
     <h2>졸업하면 어디서, 무엇을 하게 될까요?</h2>
-    <p class="lead">직무를 눌러서 확인해 보세요.</p>
+    <p class="lead">직무를 선택하면 하는 일과 필요한 역량, 지금부터 해볼 준비를 볼 수 있어요.</p>
 
     <div class="roles">
       <div class="rolelist" role="tablist" aria-label="진로 직무" id="roles"></div>
@@ -260,6 +269,12 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
 
     <div class="marquee" aria-label="취득을 도와주는 자격증 목록"><div id="certs"></div></div>
     <p class="cap">경영정보학부 학생이 준비하는 대표 자격증</p>
+    <p class="career-note">아래 준비 방법은 진로 탐색을 위한 출발점입니다. 자격증이나 활동이 합격을 보장하지 않으며, 실제 요구 역량은 회사와 공고에 따라 달라집니다. 동문 개인의 합격 스펙을 확인한 자료는 아니므로, 지원 전 관심 기업의 최신 채용 공고를 꼭 확인하세요.</p>
+    <div class="career-sources" aria-label="진로 정보 출처">
+      <a href="https://biz.kookmin.ac.kr/undergraduate/info/intro?tab=1" target="_blank" rel="noopener">국민대 경영정보학부 진로 소개</a>
+      <a href="https://careers.kakao.com/jobs/S-4783" target="_blank" rel="noopener">채용 공고 예시: 서비스 기획·데이터 활용</a>
+      <a href="https://careers.kakao.com/jobs/S-4689" target="_blank" rel="noopener">채용 공고 예시: 데이터 분석·SQL·Python</a>
+    </div>
   </div>
 </section>
 
@@ -398,17 +413,27 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
 
   // 진로 직무
   var roles=[
-    ['IT 컨설팅','기업의 경영 문제를 정보기술로 풀 수 있도록 진단하고 해결 방향을 제안합니다.'],
-    ['정보화 기획·전략 수립','조직이 어떤 정보시스템을 언제, 어떻게 도입할지 계획하고 전략을 세웁니다.'],
-    ['정보시스템 관리·운영','기업의 핵심 업무를 지탱하는 정보시스템을 안정적으로 관리하고 운영합니다.'],
-    ['빅데이터 분석·응용','쌓인 데이터를 분석해 비즈니스에 쓸 수 있는 인사이트를 찾아냅니다.']
+    {name:'IT 컨설팅',summary:'기업의 업무와 문제를 살펴보고, 정보기술을 활용한 개선 방향과 실행 계획을 제안합니다.',work:'현업 담당자 인터뷰, 업무 흐름 분석, 요구사항 정리, 시스템 도입·개선안과 발표 자료 작성 등을 합니다.',skills:'문제를 구조화하는 힘, 문서·발표 능력, 협업과 질문 능력이 중요합니다. 엑셀과 데이터베이스 기초를 알면 분석에 도움이 됩니다.',start:'관심 있는 서비스나 조직의 불편을 하나 골라 원인과 개선안을 5장 이내로 정리해 보세요. 수업 프로젝트에서 업무 흐름도와 발표 자료를 만들어 보는 것도 좋습니다.',portfolio:'문제 정의 → 현재 업무 흐름 → 개선안 → 기대 효과를 담은 짧은 사례 보고서와 발표 자료'},
+    {name:'정보화 기획·서비스 기획',summary:'사용자와 조직의 필요를 파악해 디지털 서비스나 정보시스템의 방향과 우선순위를 정합니다.',work:'사용자 요구 수집, 기능 정의, 화면 흐름 작성, 일정·우선순위 조정, 개발·디자인·사업 담당자와의 협업을 합니다.',skills:'사용자 관점, 명확한 글쓰기, 논리적인 우선순위 설정이 핵심입니다. 지표와 SQL을 이용해 가설을 확인하는 경험도 유용합니다.',start:'자주 쓰는 앱의 불편을 관찰해 문제·사용자·개선 기능·성공 지표를 한 장으로 제안해 보세요. 간단한 화면 시안이나 사용자 인터뷰를 더하면 포트폴리오가 됩니다.',portfolio:'사용자 인터뷰 요약, 화면 흐름 또는 시안, 기능 우선순위와 성공 지표를 모은 개선 제안'},
+    {name:'정보시스템 관리·운영',summary:'ERP·CRM 등 조직의 업무 시스템이 안정적으로 돌아가도록 운영하고 개선합니다.',work:'시스템과 데이터 점검, 사용자 문의 대응, 권한 관리, 장애 원인 확인, 테스트와 변경사항 문서화를 수행합니다.',skills:'데이터베이스와 SQL 기초, 꼼꼼한 기록, 원인을 단계적으로 찾는 태도, 사용자와 소통하는 능력이 필요합니다.',start:'작은 데이터베이스를 설계해 조회·수정해 보고, 기능별 테스트 항목과 사용 설명서를 작성해 보세요. 운영·클라우드·보안 기초를 함께 익히면 좋습니다.',portfolio:'간단한 업무 데이터베이스, 테스트 체크리스트, 장애 상황과 해결 과정을 기록한 운영 문서'},
+    {name:'빅데이터 분석·응용',summary:'데이터를 정리하고 분석해 고객과 조직의 의사결정에 쓸 근거를 만듭니다.',work:'질문을 지표로 바꾸고, SQL 등으로 데이터를 추출·정제한 뒤 분석 결과를 시각화하고 이해관계자에게 설명합니다.',skills:'SQL, 기초 통계, 스프레드시트와 시각화 도구가 기본입니다. 업무에 따라 Python 및 데이터 처리 경험이 요구될 수 있습니다.',start:'공공 데이터를 활용해 구체적인 질문 하나를 정하고, 분석 과정·차트·결론·한계를 함께 담은 짧은 보고서를 만들어 보세요. 결과를 비즈니스 맥락으로 설명하는 연습도 해보세요.',portfolio:'분석 질문과 지표, SQL·분석 과정, 시각화, 해석과 한계를 한 파일로 정리한 프로젝트'},
   ];
   var rl=document.getElementById('roles'),rv=document.getElementById('roleview');
+  function renderRole(role){
+    rv.replaceChildren();
+    var title=document.createElement('h3');title.textContent=role.name;
+    var summary=document.createElement('p');summary.className='role-summary';summary.textContent=role.summary;
+    var details=document.createElement('div');details.className='role-details';
+    [['주요 업무',role.work],['도움이 되는 역량',role.skills],['지금 해볼 준비',role.start],['포트폴리오 예시',role.portfolio]].forEach(function(item){
+      var box=document.createElement('section');var heading=document.createElement('h4');heading.textContent=item[0];var copy=document.createElement('p');copy.textContent=item[1];box.append(heading,copy);details.appendChild(box);
+    });
+    rv.append(title,summary,details);
+  }
   roles.forEach(function(r,i){
-    var b=document.createElement('button');b.setAttribute('role','tab');b.textContent=r[0];
+    var b=document.createElement('button');b.setAttribute('role','tab');b.setAttribute('aria-selected','false');b.textContent=r.name;
     b.addEventListener('click',function(){
       rl.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-selected',x===b)});
-      rv.innerHTML='<h3>'+r[0]+'</h3><p>'+r[1]+'</p>';
+      renderRole(r);
     });rl.appendChild(b);
   });
   rl.firstChild.click();
